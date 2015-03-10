@@ -1,9 +1,19 @@
 {
     "name": "nucivic/pipedrive_export",
     "description": "NuCivic Pipedrive CSV export",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.zendframework.com/"
+        }
+    ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/console": "2.6.4"
+        "symfony/console": "2.6.4",
+        "curl/curl": "1.1.5",
+        "zendframework/zend-filter": "2.3.3",
+        "zendframework/zend-validator": "2.3.3"
+
     },
     "autoload": {
         "psr-0": {

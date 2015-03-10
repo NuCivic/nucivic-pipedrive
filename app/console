@@ -1,3 +1,19 @@
 #!/usr/bin/env php#!/usr/bin/env php
 <?php
-echo "Hello world!\n";
+
+// set to run indefinitely
+set_time_limit(0);
+
+// This is for GovDerlivery, so Central Time!
+date_default_timezone_set('America/Chicago');
+
+// include the composer autoloader
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// import the Symfony Console Application
+use NuCivicPipedrive\Console\Application;
+use NuCivicPipedrive\Console\Command\ExportCommand;
+
+$app = new Application();
+$app->run();
+?>
