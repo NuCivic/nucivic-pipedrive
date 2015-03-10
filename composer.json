@@ -1,0 +1,13 @@
+{
+    "name": "nucivic/pipedrive_export",
+    "description": "NuCivic Pipedrive CSV export",
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/console": "2.6.4"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    }
+}
