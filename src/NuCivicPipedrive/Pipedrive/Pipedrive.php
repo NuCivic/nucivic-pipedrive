@@ -8,6 +8,7 @@ namespace NuCivicPipedrive\Pipedrive;
  * Heavily based on https://github.com/Pinvoice/pipedrive-php-api/
  */
 
+use NuCivicPipedrive\Pipedrive\Library\HTTP;
 use NuCivicPipedrive\Pipedrive\Library\DealFields;
 use NuCivicPipedrive\Pipedrive\Library\Deals;
 use NuCivicPipedrive\Pipedrive\Library\PersonFields;
