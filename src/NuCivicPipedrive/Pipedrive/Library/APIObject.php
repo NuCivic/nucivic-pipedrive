@@ -9,6 +9,12 @@ use Zend\Validator\Digits;
 
 abstract class APIObject
 {
+    /**
+     * Fields to keep for CSV export
+     * @var array
+     */
+    public $fields_keep;
+    public $endpoint;
 
     /**
      * [$http description]
@@ -57,6 +63,31 @@ abstract class APIObject
                 debug_backtrace()[1]['function'] . ".");
         }
         return true;
+    }
+
+    /**
+     * Iterate through Pipedrive pagination to retrieve all api objects.
+     *
+     */
+    public function getAll()
+    {
+        $deals = $this->http->get($this->endpoint);
+        $data = $this->safeReturn($deals);
+
+        $pagination = $deals->additional_data->pagination;
+
+        $accepted_params = array('start', 'limit');
+        if ($pagination->more_items_in_collection == 1) {
+            do {
+                $args = array('start' => $pagination->next_start);
+                $query_string = $this->http->buildQueryString($args, $accepted_params);
+                $pass = $this->http->getWithParams($this->endpoint . '?' . $query_string);
+                $data = array_merge($data, $this->safeReturn($pass));
+                $pagination = $pass->additional_data->pagination;
+            }
+            while ($pagination->more_items_in_collection == 1);
+        }
+        return $data;
     }
 
 }

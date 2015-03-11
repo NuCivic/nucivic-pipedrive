@@ -11,10 +11,26 @@ class Deals extends APIObject
     public function __construct($http)
     {
         parent::__construct($http);
+        $this->fields_keep = array(
+            'id',
+            'title',
+            'org_id',
+            'user_id',
+            'value',
+            'Price breakdown',
+            'Estimated win probability (%)',
+            'Production start date',
+            'Production end date',
+            'Preliminary hours estimate',
+            'Deal originator',
+            'person_id',
+        );
+
+        $this->endpoint = '/deals';
     }
 
     /**
-     * Get all deals.
+     * Get multiple deals.
      *
      * HTTP GET /deals
      *
@@ -28,7 +44,7 @@ class Deals extends APIObject
      *
      * @return array Array of all deal objects.
      */
-    public function getDeals($args = array())
+    public function getMultiple($args = array())
     {
         $accepted_params = array(
             'filter_id',
@@ -46,7 +62,7 @@ class Deals extends APIObject
         } else {
             $data = $this->http->get('/deals');
         }
-
+        print_r($data);
         return $this->safeReturn($data);
     }
 

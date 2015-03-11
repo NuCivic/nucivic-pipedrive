@@ -26,15 +26,17 @@ class PersonFields extends APIObject
      * @param Person $person Person object with key as custom Person fields.
      * @return Person Person object with text as custom Person fields.
      */
-    public function translatePersonFieldKeys($person)
+    public function translatePersonFieldKeys($person, array $personfields)
     {
-        $personfields = $this->getPersonFields();
 
         foreach ($person as $key => $value) {
             if ($this->isCustomPersonField($key)) {
-                $name = $this->getPersonFieldByKey($key, $personfields)->name;
-                $person->$name = $person->$key;
-                unset($person->$key);
+                $personfield = $this->getPersonFieldByKey($key, $personfields);
+                if ($personfield) {
+                    $name = $personfield->name;
+                    $person->$name = $person->$key;
+                    unset($person->$key);
+                }
             }
         }
 

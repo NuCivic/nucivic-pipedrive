@@ -9,6 +9,7 @@ namespace NuCivicPipedrive\Pipedrive;
  */
 
 use NuCivicPipedrive\Pipedrive\Library\HTTP;
+use NuCivicPipedrive\Pipedrive\Library\CSV;
 use NuCivicPipedrive\Pipedrive\Library\DealFields;
 use NuCivicPipedrive\Pipedrive\Library\Deals;
 use NuCivicPipedrive\Pipedrive\Library\PersonFields;

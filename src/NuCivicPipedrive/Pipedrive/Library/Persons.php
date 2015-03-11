@@ -12,6 +12,27 @@ class Persons extends APIObject
     public function __construct($http)
     {
         parent::__construct($http);
+
+        $this->fields_keep = array(
+            'id',
+            'name',
+            'phone',
+            'email',
+            'add_time',
+            'update_time',
+            'Title',
+            'org_id',
+            'owner_id',
+            'open_deals_count',
+            'visible_to',
+            'next_activity_date',
+            'last_activity_date',
+            'Referral source',
+            'Instant messenger',
+            'Postal address',
+        );
+
+        $this->endpoint = '/persons';
     }
 
     /**
