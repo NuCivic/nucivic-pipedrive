@@ -35,7 +35,7 @@ class HTTP
         $curl = new Curl();
         $curl->get($this->endpoint . $url . '?api_token=' . $this->token);
         $curl->close();
-        return json_decode($curl->response);
+        return $curl->response;
     }
     /**
      * HTTP GET wrapper for Curl.
@@ -44,12 +44,12 @@ class HTTP
      * @param string $url URL to GET request to.
      * @return mixed Response data.
      */
-    public function getWithParams($url)
+    public function getWithParams($url, $params)
     {
         $curl = new Curl();
         $curl->get($this->endpoint . $url . '&api_token=' . $this->token);
         $curl->close();
-        return json_decode($curl->response);
+        return $curl->response;
     }
     /**
      * HTTP POST wrapper for Curl.
