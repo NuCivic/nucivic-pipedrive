@@ -73,15 +73,24 @@ EOT
             // $output->writeln("<info>Activities exported</info>");
 
             // Files
-            $output->writeln("Querying pipedrive for files...");
-            $data = $pipedrive->files->getAll();
-            $output->writeln("Cleaning up file data...");
-            $pipedrive->files->cleanData($data);
+            // $output->writeln("Querying pipedrive for files...");
+            // $data = $pipedrive->files->getAll();
+            // $output->writeln("Cleaning up file data...");
+            // $pipedrive->files->cleanData($data);
+            // $csv = new CSV($data);
+            // $csv->write('files.csv');
+            // $output->writeln("Downloading files to disk...");
+            // $pipedrive->files->downloadFiles($data);
+            // $output->writeln("<info>Files exported</info>");
+
+            // Notes
+            $output->writeln("Querying pipedrive for notes...");
+            $data = $pipedrive->notes->getAll();
+            $output->writeln("Cleaning up note data...");
+            $pipedrive->notes->cleanData($data);
             $csv = new CSV($data);
-            $csv->write('files.csv');
-            $output->writeln("Downloading files to disk...");
-            $pipedrive->files->downloadFiles($data);
-            $output->writeln("<info>Files exported</info>");
+            $csv->write('notes.csv');
+            $output->writeln("<info>Notes exported</info>");
         }
         else {
             $output->writeln("Not authenticated");

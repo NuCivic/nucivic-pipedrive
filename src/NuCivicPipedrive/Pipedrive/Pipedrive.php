@@ -20,6 +20,7 @@ use NuCivicPipedrive\Pipedrive\Library\Pipelines;
 use NuCivicPipedrive\Pipedrive\Library\Stages;
 use NuCivicPipedrive\Pipedrive\Library\Activities;
 use NuCivicPipedrive\Pipedrive\Library\Files;
+use NuCivicPipedrive\Pipedrive\Library\Notes;
 use Symfony\Component\Yaml\Parser;
 
 class Pipedrive
@@ -67,7 +68,8 @@ class Pipedrive
         $this->pipelines = new Pipelines($this->http);
         $this->stages = new Stages($this->http);
         $this->activities = new Activities($this->http);
-        $this->files = new files($this->http);
+        $this->files = new Files($this->http);
+        $this->notes = new Notes($this->http);
     }
 
     public function isAuthenticated()
