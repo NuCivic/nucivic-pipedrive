@@ -30,71 +30,24 @@ class HTTP
      * @param string $url URL to GET request to.
      * @return mixed Response data.
      */
-    public function get($url)
+    public function get($url, $params = array())
     {
+        $params['api_token'] = $this->token;
         $curl = new Curl();
-        $curl->get($this->endpoint . $url . '?api_token=' . $this->token);
+        $curl->get($this->endpoint . $url, $params);
         $curl->close();
         return $curl->response;
     }
     /**
-     * HTTP GET wrapper for Curl.
-     * For requests with additional query parameters.
-     *
-     * @param string $url URL to GET request to.
-     * @return mixed Response data.
+     * Download a file from export
      */
-    public function getWithParams($url, $params)
-    {
+    public function downloadAuth($url, $path, $params = array()) {
+        $params['api_token'] = $this->token;
         $curl = new Curl();
-        $curl->get($this->endpoint . $url . '&api_token=' . $this->token);
+        $curl->setOpt(CURLOPT_FOLLOWLOCATION, TRUE);
+        $url .= '?' . http_build_query($params);
+        echo $url . "\n";
+        $curl->download($url, $path);
         $curl->close();
-        return $curl->response;
-    }
-    /**
-     * HTTP POST wrapper for Curl.
-     *
-     * @param string $url URL to POST request to.
-     * @param array $args POST data.
-     * @return mixed Response data.
-     */
-    /**
-     * public function post($url, array $args = array())
-     * {
-     *    $curl = new Curl();
-     *    $curl->post($this->endpoint . $url . '?api_token=' . $this->token, $args);
-     *    $curl->close();
-     *
-     *    return json_decode($curl->response);
-     * }
-     */
-    /**
-     * Function to build the query string.
-     * Will check which keys from $args are in $accepted_params, and build a query string from the key/val pairs.
-     *
-     * @param array $args Array of parameters (key,value).
-     * @param array $accepted_params Accepted parameter keys.
-     *
-     * @throws APIException if param is not in accepted params.
-     * @return string Query string for HTTP request.
-     */
-    public function buildQueryString($args, $accepted_params)
-    {
-        $query_string = "";
-        $first = true;
-        foreach ($args as $key => $val) {
-            if (in_array($key, $accepted_params)) {
-                if ($first) {
-                    $query_string .= $key . '=' . $val;
-                } else {
-                    $query_string .= '&' . $key . '=' . $val;
-                }
-                $first = false;
-            } else {
-                throw new APIException("Param '" . $key . "' does not exist in function " .
-                    debug_backtrace()[1]['function'] . ".");
-            }
-        }
-        return $query_string;
     }
 }
