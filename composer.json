@@ -10,6 +10,7 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/console": "2.6.4",
+        "symfony/yaml": "2.6.4",
         "php-curl-class/php-curl-class": "2.1.1",
         "zendframework/zend-filter": "2.3.3",
         "zendframework/zend-validator": "2.3.3",
