@@ -28,60 +28,60 @@ EOT
             $output->writeln("Authenticated");
 
             // People
-            // $output->writeln("Querying pipedrive for persons...");
-            // $data = $pipedrive->persons->getAll();
-            // $output->writeln("Cleaning up person data...");
-            // $pipedrive->persons->cleanData($data);
-            // $csv = new CSV($data);
-            // $csv->write('persons.csv');
-            // $output->writeln("Persons exported");
+            $output->writeln("Querying pipedrive for persons...");
+            $data = $pipedrive->persons->getAll();
+            $output->writeln("Cleaning up person data...");
+            $pipedrive->persons->cleanData($data);
+            $csv = new CSV($data);
+            $csv->write('persons.csv');
+            $output->writeln("Persons exported");
 
-            // // Organizations
-            // $output->writeln("Querying pipedrive for organizations...");
-            // $data = $pipedrive->organizations->getAll();
-            // $output->writeln("Cleaning up orgnaizations data...");
-            // $pipedrive->organizations->cleanData($data);
-            // $csv = new CSV($data);
-            // $csv->write('organizations.csv');
-            // $output->writeln("Organizations exported");
+            // Organizations
+            $output->writeln("Querying pipedrive for organizations...");
+            $data = $pipedrive->organizations->getAll();
+            $output->writeln("Cleaning up orgnaizations data...");
+            $pipedrive->organizations->cleanData($data);
+            $csv = new CSV($data);
+            $csv->write('organizations.csv');
+            $output->writeln("Organizations exported");
 
-            // // Deals
-            // $output->writeln("Querying pipedrive for deals...");
-            // $data = $pipedrive->deals->getAll();
-            // $output->writeln("Cleaning up deal data...");
-            // $pipedrive->deals->cleanData($data);
-            // $csv = new CSV($data);
-            // $csv->write('deals.csv');
-            // $output->writeln("<info>Deals exported</info>");
+            // Deals
+            $output->writeln("Querying pipedrive for deals...");
+            $data = $pipedrive->deals->getAll();
+            $output->writeln("Cleaning up deal data...");
+            $pipedrive->deals->cleanData($data);
+            $csv = new CSV($data);
+            $csv->write('deals.csv');
+            $output->writeln("<info>Deals exported</info>");
 
-            // // Products
-            // $output->writeln("Querying pipedrive for products...");
-            // $data = $pipedrive->products->getAll();
-            // $output->writeln("Cleaning up product data...");
-            // $pipedrive->products->cleanData($data);
-            // $csv = new CSV($data);
-            // $csv->write('products.csv');
-            // $output->writeln("<info>Products exported</info>");
+            // Products
+            $output->writeln("Querying pipedrive for products...");
+            $data = $pipedrive->products->getAll();
+            $output->writeln("Cleaning up product data...");
+            $pipedrive->products->cleanData($data);
+            $csv = new CSV($data);
+            $csv->write('products.csv');
+            $output->writeln("<info>Products exported</info>");
 
             // Activities
-            // $output->writeln("Querying pipedrive for activities...");
-            // $data = $pipedrive->activities->getAll();
-            // $output->writeln("Cleaning up product data...");
-            // $pipedrive->activities->cleanData($data);
-            // $csv = new CSV($data);
-            // $csv->write('activities.csv');
-            // $output->writeln("<info>Activities exported</info>");
+            $output->writeln("Querying pipedrive for activities...");
+            $data = $pipedrive->activities->getAll();
+            $output->writeln("Cleaning up product data...");
+            $pipedrive->activities->cleanData($data);
+            $csv = new CSV($data);
+            $csv->write('activities.csv');
+            $output->writeln("<info>Activities exported</info>");
 
             // Files
-            // $output->writeln("Querying pipedrive for files...");
-            // $data = $pipedrive->files->getAll();
-            // $output->writeln("Cleaning up file data...");
-            // $pipedrive->files->cleanData($data);
-            // $csv = new CSV($data);
-            // $csv->write('files.csv');
-            // $output->writeln("Downloading files to disk...");
+            $output->writeln("Querying pipedrive for files...");
+            $data = $pipedrive->files->getAll();
+            $output->writeln("Cleaning up file data...");
+            $pipedrive->files->cleanData($data);
+            $csv = new CSV($data);
+            $csv->write('files.csv');
+            $output->writeln("Downloading files to disk...");
             // $pipedrive->files->downloadFiles($data);
-            // $output->writeln("<info>Files exported</info>");
+            $output->writeln("<info>Files exported</info>");
 
             // Notes
             $output->writeln("Querying pipedrive for notes...");

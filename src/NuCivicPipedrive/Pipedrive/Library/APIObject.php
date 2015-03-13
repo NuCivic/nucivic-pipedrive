@@ -104,7 +104,7 @@ abstract class APIObject
     /**
      * Get all fields.
      *
-     * @return array Array of all person field objects.
+     * @return array Array of all field objects.
      */
     public function getFields()
     {
