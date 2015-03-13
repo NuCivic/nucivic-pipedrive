@@ -46,26 +46,4 @@ class CSV
     $exporter->export($path, $this->data);
   }
 
-  /**
-   * [cleanData description]
-   * @param  [type] $filter Array of filters to apply to the object's data property
-   */
-  public function cleanData($filter) {
-    if (!empty($filter['fields_keep'])) {
-      foreach($this->data as $rownum => $row) {
-        foreach($row as $field => $value) {
-          if ($row['id'] > 270 && $row['id'] < 275) {
-            // print_r($row);
-          }
-          if (!in_array($field, $filter['fields_keep'])) {
-            // unset($this->data[$rownum][$field]);
-          }
-          if (is_object($value)) {
-            $this->data[$rownum][$field] = $value->value;
-          }
-        }
-      }
-    }
-  }
-
 }

@@ -13,8 +13,19 @@ abstract class APIObject
      * Fields to keep for CSV export
      * @var array
      */
-    public $fields_keep;
+    public $filter;
+
+    /**
+     * Base url for data endpoint
+     * @var [type]
+     */
     public $endpoint;
+
+    /**
+     * Base url for data endpoint
+     * @var [type]
+     */
+    public $fieldsEndpoint;
 
     /**
      * [$http description]
@@ -29,6 +40,8 @@ abstract class APIObject
     protected function __construct($http)
     {
         $this->http = $http;
+        $this->filter = array();
+        $this->endpoint = NULL;
     }
 
     /**
@@ -71,23 +84,113 @@ abstract class APIObject
      */
     public function getAll()
     {
-        $deals = $this->http->get($this->endpoint);
-        $data = $this->safeReturn($deals);
+        $items = $this->http->get($this->endpoint);
+        $data = $this->safeReturn($items);
 
-        $pagination = $deals->additional_data->pagination;
+        $pagination = $items->additional_data->pagination;
 
-        $accepted_params = array('start', 'limit');
         if ($pagination->more_items_in_collection == 1) {
             do {
                 $args = array('start' => $pagination->next_start);
-                $query_string = $this->http->buildQueryString($args, $accepted_params);
-                $pass = $this->http->getWithParams($this->endpoint . '?' . $query_string);
+                $pass = $this->http->get($this->endpoint, $args);
                 $data = array_merge($data, $this->safeReturn($pass));
                 $pagination = $pass->additional_data->pagination;
             }
             while ($pagination->more_items_in_collection == 1);
         }
         return $data;
+    }
+
+    /**
+     * Get all fields.
+     *
+     * @return array Array of all person field objects.
+     */
+    public function getFields()
+    {
+        if (!$this->fieldsEndpoint) {
+            return array();
+        }
+        $data = $this->http->get($this->fieldsEndpoint);
+        return $this->safeReturn($data);
+    }
+
+    public function translateFieldKeys(&$row, array $fields)
+    {
+        foreach ($row as $key => $value) {
+            if ($this->isCustomField($key)) {
+                $field = $this->getFieldByKey($key, $fields);
+                if ($field) {
+                    $name = $field->name;
+                    $row->$name = $row->$key;
+                    unset($row->$key);
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if key is a custom field.
+     *
+     * Checks for: 40 characters, loweralpha + numeric.
+     *
+     * @param string $key Key of Person field.
+     * @return boolean True if $key is custom Person field.
+     */
+    public function isCustomField($key)
+    {
+        return preg_match('/^[a-f0-9]{40}$/', $key);
+    }
+
+    /**
+     * Translate custom field key to text.
+     *
+     * @param string $key Key of field.
+     * @param object $fields Custom Fields to look through (output of getFields()).
+     * @return string Field text that belongs to key.
+     */
+    public function getFieldByKey($key, array $fields)
+    {
+        foreach ($fields as $field) {
+            if ($field->key == $key) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * [cleanData description]
+     * @param  [type] $filter Array of filters to apply to the object's data property
+     */
+    public function cleanData(&$data) {
+        $raw = $data;
+        $data = array();
+        $fields = $this->getFields();
+        foreach($raw as $key => $row) {
+            $this->translateFieldKeys($row, $fields);
+            $data[$key] = get_object_vars($row);
+        }
+        if (!empty($this->filter['fields_keep'])) {
+            foreach($data as $rownum => $row) {
+                foreach($row as $field => $value) {
+                    if (!in_array($field, $this->filter['fields_keep'])) {
+                        unset($data[$rownum][$field]);
+                    }
+                    elseif (is_object($value) && isset($value->value)) {
+                        $data[$rownum][$field] = $value->value;
+                    }
+                    elseif (is_array($value) && is_object(current($value))) {
+                        $multival = array();
+                        foreach ($value as $subvalue) {
+                            $multival[] = $subvalue->value;
+                        }
+                        $data[$rownum][$field] = implode(';', $multival);
+                    }
+                }
+            }
+        }
     }
 
 }

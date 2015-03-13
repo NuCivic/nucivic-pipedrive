@@ -1,6 +1,6 @@
 <?php
 
-namespace Pinvoice\Pipedrive\Exceptions;
+namespace NuCivicPipedrive\Pipedrive\Exceptions;
 
 class PipedriveException extends \Exception
 {
