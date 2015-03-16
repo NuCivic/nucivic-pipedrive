@@ -67,13 +67,22 @@ EOT
             $output->writeln("<info>Deal participants exported</info>");
 
             // Products
-            // $output->writeln("Querying pipedrive for products...");
-            // $data = $pipedrive->products->getAll();
-            // $output->writeln("Cleaning up product data...");
-            // $pipedrive->products->cleanData($data);
-            // $csv = new CSV($data);
-            // $csv->write('products.csv');
-            // $output->writeln("<info>Products exported</info>");
+            $output->writeln("Querying pipedrive for products...");
+            $data = $pipedrive->products->getAll();
+            $output->writeln("Cleaning up product data...");
+            $pipedrive->products->cleanData($data);
+            $csv = new CSV($data);
+            $csv->write('products.csv');
+            $output->writeln("<info>Products exported</info>");
+
+            $output->writeln("Querying pipedrive for deal products...");
+            $data = $pipedrive->dealProducts->getAll($dealData);
+            $output->writeln("Cleaning up deal product data...");
+            $pipedrive->dealProducts->cleanData($data);
+            $csv = new CSV($data);
+            $csv->write('deal_products.csv');
+            unset($data, $csv);
+            $output->writeln("<info>Deal products exported</info>");
 
             // Activities
             // $output->writeln("Querying pipedrive for activities...");
