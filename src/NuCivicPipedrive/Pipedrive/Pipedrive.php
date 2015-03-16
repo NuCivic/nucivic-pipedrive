@@ -12,6 +12,7 @@ use NuCivicPipedrive\Pipedrive\Library\HTTP;
 use NuCivicPipedrive\Pipedrive\Library\CSV;
 use NuCivicPipedrive\Pipedrive\Library\DealFields;
 use NuCivicPipedrive\Pipedrive\Library\Deals;
+use NuCivicPipedrive\Pipedrive\Library\DealParticipants;
 use NuCivicPipedrive\Pipedrive\Library\PersonFields;
 use NuCivicPipedrive\Pipedrive\Library\Persons;
 use NuCivicPipedrive\Pipedrive\Library\Organizations;
@@ -33,6 +34,8 @@ class Pipedrive
     public $stages;
     public $files;
     public $activities;
+    public $notes;
+    public $dealParticipants;
 
     /**
      * Endpoint for Pipedrive, HTTP or HTTPS (configurable).
@@ -62,6 +65,7 @@ class Pipedrive
         $this->http = new HTTP($this->token, $this->endpoint);
 
         $this->deals = new Deals($this->http);
+        $this->dealParticipants = new DealParticipants($this->http);
         $this->persons = new Persons($this->http);
         $this->organizations = new Organizations($this->http);
         $this->products = new Products($this->http);
