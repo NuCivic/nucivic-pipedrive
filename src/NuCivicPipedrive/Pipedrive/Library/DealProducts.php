@@ -47,9 +47,10 @@ class DealProducts extends APIObject
         $data = array();
         foreach ($dealData as $deal) {
             $dealId = is_object($deal) ? $deal->id : $deal['id'];
-            $products = $this->http->get('/deals/' . $dealId . '/products');
-            $products =$this->safeReturn($products);
-            if (is_array($products)) {
+            $count = is_object($deal) ? $deal->products_count : $deal['products_count'];
+            if ($count) {
+                $products = $this->http->get('/deals/' . $dealId . '/products');
+                $products =$this->safeReturn($products);
                 $data = array_merge($data, $products);
             }
         }
