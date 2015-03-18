@@ -9,7 +9,12 @@ use Symfony\Component\Console\Input\InputOption;
 use NuCivicPipedrive\Pipedrive\Pipedrive as PipedriveAPI;
 use NuCivicPipedrive\Pipedrive\Library\CSV;
 
+
 class ExportCommand extends Command {
+
+    protected $dealData;
+    protected $pipedrive;
+
     protected function configure() {
         $this->setName("export")
              ->setDescription("Export Pipedrive data to CSV")
@@ -23,100 +28,60 @@ EOT
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $pipedrive = new PipedriveAPI();
-        if ($success = $pipedrive->isAuthenticated()) {
+        $this->pipedrive = new PipedriveAPI();
+        if ($success = $this->pipedrive->isAuthenticated()) {
             $output->writeln("Authenticated");
 
-            // People
-            $output->writeln("Querying pipedrive for persons...");
-            $data = $pipedrive->persons->getAll();
-            $output->writeln("Cleaning up person data...");
-            $pipedrive->persons->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('persons.csv');
-            $output->writeln("Persons exported");
+            $tables = $input->getArgument('tables');
+            if(empty($tables)) {
+                $tables = array(
+                    'deals',
+                    'dealParticipants',
+                    'persons',
+                    'dealProducts',
+                    'products',
+                    'organizations',
+                    'activities',
+                    'files',
+                    'notes',
+                );
+            }
 
-            // Organizations
-            $output->writeln("Querying pipedrive for organizations...");
-            $data = $pipedrive->organizations->getAll();
-            $output->writeln("Cleaning up orgnaizations data...");
-            $pipedrive->organizations->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('organizations.csv');
-            $output->writeln("Organizations exported");
+            // Deals - we need the deals data for sub-deal objects too so load
+            // regardless
 
-            // Deals
-            $output->writeln("Querying pipedrive for deals...");
-            $data = $pipedrive->deals->getAll();
-            // Clone for join tables
-            $dealData = $data;
-            $output->writeln("Cleaning up deal data...");
-            $pipedrive->deals->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('deals.csv');
-            unset($data, $csv);
-            $output->writeln("<info>Deals exported</info>");
+            if (in_array('deals', $tables)
+                || in_array('dealParticipants', $tables)
+                || in_array('dealProducts', $tables))
+            {
+                $output->writeln("Querying pipedrive for deals...");
+                $this->dealData = $this->pipedrive->deals->getAll();
 
-            // // Deal participants
-            $output->writeln("Querying pipedrive for deal participants...");
-            $data = $pipedrive->dealParticipants->getAll($dealData);
-            $output->writeln("Cleaning up deal participant data...");
-            $pipedrive->dealParticipants->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('deal_participants.csv');
-            unset($data, $csv);
-            $output->writeln("<info>Deal participants exported</info>");
+            }
+            foreach($tables as $table) {
+                $data = $this->exportTable($table, $output);
+                if ($table == 'files') {
+                    $output->writeln("Downloading files to disk...");
+                    $this->pipedrive->files->downloadFiles($data);
+                    $output->writeln("<info>Files exported</info>");
+                }
+            }
 
-            // // Products
-            $output->writeln("Querying pipedrive for products...");
-            $data = $pipedrive->products->getAll();
-            $output->writeln("Cleaning up product data...");
-            $pipedrive->products->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('products.csv');
-            $output->writeln("<info>Products exported</info>");
-
-            $output->writeln("Querying pipedrive for deal products...");
-            $data = $pipedrive->dealProducts->getAll($dealData);
-            $output->writeln("Cleaning up deal product data...");
-            $pipedrive->dealProducts->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('deal_products.csv');
-            unset($data, $csv);
-            $output->writeln("<info>Deal products exported</info>");
-
-            // Activities
-            $output->writeln("Querying pipedrive for activities...");
-            $data = $pipedrive->activities->getAll();
-            $output->writeln("Cleaning up product data...");
-            $pipedrive->activities->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('activities.csv');
-            $output->writeln("<info>Activities exported</info>");
-
-            // Files
-            $output->writeln("Querying pipedrive for files...");
-            $data = $pipedrive->files->getAll();
-            $output->writeln("Cleaning up file data...");
-            $pipedrive->files->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('files.csv');
-            $output->writeln("Downloading files to disk...");
-            // $pipedrive->files->downloadFiles($data);
-            $output->writeln("<info>Files exported</info>");
-
-            // Notes
-            $output->writeln("Querying pipedrive for notes...");
-            $data = $pipedrive->notes->getAll();
-            $output->writeln("Cleaning up note data...");
-            $pipedrive->notes->cleanData($data);
-            $csv = new CSV($data);
-            $csv->write('notes.csv');
-            $output->writeln("<info>Notes exported</info>");
         }
         else {
             $output->writeln("Not authenticated");
             return;
         }
+    }
+
+    protected function exportTable($table, $output) {
+        $output->writeln("Querying pipedrive for {$table}...");
+        $data = $this->pipedrive->$table->getAll($this->dealData);
+        $output->writeln("Cleaning up $table data...");
+        $this->pipedrive->$table->cleanData($data);
+        $csv = new CSV($data);
+        $csv->write("{$table}.csv");
+        $output->writeln("<info>$table exported</info>");
+        return $data;
     }
 }
