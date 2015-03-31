@@ -44,6 +44,7 @@ EOT
                     'activities',
                     'files',
                     'notes',
+                    'users',
                 );
             }
 
